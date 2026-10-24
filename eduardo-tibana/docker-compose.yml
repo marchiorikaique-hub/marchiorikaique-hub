@@ -1,0 +1,10 @@
+services:
+  site:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - SETUP_CODE=${SETUP_CODE}
+    volumes:
+      - ./data:/app/data
