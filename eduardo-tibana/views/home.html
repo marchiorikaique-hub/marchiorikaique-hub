@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{nome}} · {{titulo}}</title>
+  <meta name="description" content="{{chamada}}">
+  <meta property="og:title" content="{{nome}} · {{titulo}}">
+  <meta property="og:description" content="{{chamada}}">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="topo">
+    <div class="wrap">
+      <a class="marca" href="/">{{nome}}{{empresa}}</a>
+      <nav class="nav">
+        <a href="#sobre">Sobre</a>
+        <a href="#atuacao">Atuação</a>
+        <a href="#contato">Contato</a>
+        <a class="btn btn-primario" href="/diagnostico">Diagnóstico gratuito</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="hero">
+      <div class="wrap">
+        <div>
+          <span class="rotulo">{{titulo}}</span>
+          <h1>{{nome}}</h1>
+          <p class="chamada">{{chamada}}</p>
+          <div class="acoes">
+            <a class="btn btn-cobre" href="/diagnostico">Avaliar minha empresa</a>
+            <a class="btn btn-claro" href="#sobre">Conhecer minha trajetória</a>
+          </div>
+        </div>
+        <div class="retrato">{{foto}}</div>
+      </div>
+    </div>
+
+    <section id="sobre" class="sec-branca">
+      <div class="wrap sobre">
+        <div>
+          <span class="rotulo">Sobre</span>
+          <h2>Da operação ao conselho.</h2>
+        </div>
+        <div class="texto">{{bio}}</div>
+      </div>
+    </section>
+
+    <section id="atuacao">
+      <div class="wrap">
+        <span class="rotulo">Atuação</span>
+        <h2>Onde posso ajudar</h2>
+        <div class="pilares">
+          <div class="pilar">
+            <span class="num">01</span>
+            <h3>Governança e conselho</h3>
+            <p>Visão de conselheiro para organizar decisões, riscos e prioridades, incluindo a pauta de tecnologia e IA na diretoria.</p>
+          </div>
+          <div class="pilar">
+            <span class="num">02</span>
+            <h3>IA aplicada a projetos</h3>
+            <p>Método AIPM para levar IA ao planejamento, aos riscos, aos cronogramas e ao acompanhamento de projetos, com o ser humano no comando.</p>
+          </div>
+          <div class="pilar">
+            <span class="num">03</span>
+            <h3>Telecom e infraestrutura</h3>
+            <p>Experiência prática em operação, contratos e projetos de rede, para empresas que precisam ganhar eficiência em campo.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="padding-top:0">
+      <div class="wrap">
+        <div class="cta-diag">
+          <div>
+            <span class="rotulo">Diagnóstico gratuito · 3 minutos</span>
+            <h2>Qual é o nível de maturidade em IA da sua empresa?</h2>
+            <p>Responda 12 perguntas e receba na hora uma nota de 0 a 100, a leitura por área e um plano de 90 dias.</p>
+            <a class="btn btn-cobre" href="/diagnostico" style="margin-top:8px">Fazer o diagnóstico</a>
+          </div>
+          <ul>
+            <li>Estratégia e governança</li>
+            <li>Processos e projetos</li>
+            <li>Dados e tecnologia</li>
+            <li>Pessoas e cultura</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="contato" class="sec-branca contato">
+      <div class="wrap">
+        <span class="rotulo">Contato</span>
+        <h2>Vamos conversar?</h2>
+        <p>Uma conversa de 30 minutos para entender o momento da sua empresa.</p>
+        <div class="acoes">{{contatos}}</div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>© {{ano}} {{nome}}</span>
+      <a href="/painel" style="text-decoration:none">Área restrita</a>
+    </div>
+  </footer>
+</body>
+</html>
