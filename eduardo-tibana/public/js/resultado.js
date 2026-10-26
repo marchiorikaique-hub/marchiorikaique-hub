@@ -4,7 +4,7 @@ window.esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', 
 window.renderResultado = function (r) {
   return `
     <div class="placar">
-      <div class="anel" style="--p:${r.score}"><span>${r.score}</span></div>
+      <div class="nota-grande">${r.score}<small>/100</small></div>
       <div>
         <div class="nivel">Nível ${esc(r.nivel)}</div>
         <p style="margin:6px 0 0;font-size:1.05rem;color:var(--tinta-2)">${esc(r.resumo)}</p>

@@ -14,8 +14,8 @@
   function telaContato() {
     app.innerHTML = `
       <span class="rotulo">Diagnóstico gratuito</span>
-      <h1 style="font-size:clamp(1.9rem,4vw,2.6rem)">Maturidade em IA e governança</h1>
-      <p style="font-size:1.08rem;margin-bottom:28px">12 perguntas, cerca de 3 minutos. No final você recebe uma nota de 0 a 100, a leitura por área e um plano de 90 dias.</p>
+      <h1>Maturidade em IA<br>e governança.</h1>
+      <p class="intro">12 perguntas, cerca de 3 minutos. No final você recebe uma nota de 0 a 100, a leitura por área e um plano de 90 dias.</p>
       <form class="cartao" id="form">
         <div class="grade-2">
           <div class="campo"><label for="nome">Seu nome *</label><input id="nome" required autocomplete="name"></div>
@@ -33,7 +33,7 @@
             </select></div>
         </div>
         <p class="dica">Seus dados ficam visíveis apenas para ${esc(perfil.nome)} e não são compartilhados.</p>
-        <button class="btn btn-cobre" type="submit" style="width:100%;margin-top:8px">Começar</button>
+        <button class="btn btn-primario seta" type="submit" style="width:100%;margin-top:16px">Começar o diagnóstico</button>
       </form>`;
     for (const k of ['nome', 'email', 'empresa', 'cargo', 'whatsapp', 'setor', 'porte']) {
       if (contato[k]) document.getElementById(k).value = contato[k];
@@ -55,7 +55,7 @@
         <div class="progresso"><span style="width:${((passo - 1) / total) * 100}%"></span></div>
         <h3>${esc(p.texto)}</h3>
         <div class="opcoes">
-          ${p.opcoes.map((o, i) => `<button type="button" class="opcao ${respostas[p.id] === i ? 'sel' : ''}" data-v="${i}">${esc(o)}</button>`).join('')}
+          ${p.opcoes.map((o, i) => `<button type="button" class="opcao ${respostas[p.id] === i ? 'sel' : ''}" data-v="${i}" data-letra="${'abcd'[i]}">${esc(o)}</button>`).join('')}
         </div>
         <div class="nav-passos">
           <button class="btn btn-texto" id="voltar">← Voltar</button>
@@ -99,12 +99,12 @@
     const primeiroNome = (d.nome || '').split(' ')[0];
     const msg = encodeURIComponent(`Olá ${perfil.nome.split(' ')[0]}, fiz o diagnóstico de maturidade em IA (${d.empresa}, nota ${d.resultado.score}) e gostaria de conversar.`);
     const cta = perfil.whatsapp
-      ? `<a class="btn btn-cobre" href="https://wa.me/${perfil.whatsapp}?text=${msg}" target="_blank" rel="noopener">Conversar com ${esc(perfil.nome.split(' ')[0])}</a>`
+      ? `<a class="btn btn-primario seta" href="https://wa.me/${perfil.whatsapp}?text=${msg}" target="_blank" rel="noopener">Conversar com ${esc(perfil.nome.split(' ')[0])}</a>`
       : '';
     app.innerHTML = `
       <span class="rotulo">Resultado · ${esc(d.empresa)}</span>
-      <h1 style="font-size:clamp(1.8rem,4vw,2.4rem)">${primeiroNome ? esc(primeiroNome) + ', aqui' : 'Aqui'} está o seu diagnóstico</h1>
-      <div class="cartao" style="margin-top:20px">
+      <h1>${primeiroNome ? esc(primeiroNome) + ', aqui' : 'Aqui'} está<br>o seu diagnóstico.</h1>
+      <div class="cartao" style="margin-top:32px">
         ${renderResultado(d.resultado)}
         <div class="bloco">
           <h3>Próximo passo</h3>
