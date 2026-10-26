@@ -5,19 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{nome}} · {{titulo}}</title>
   <meta name="description" content="{{chamada}}">
+  <meta name="theme-color" content="#0d0d0e">
   <meta property="og:title" content="{{nome}} · {{titulo}}">
   <meta property="og:description" content="{{chamada}}">
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-  <header class="topo">
+  <header class="topo topo-escuro">
     <div class="wrap">
       <a class="marca" href="/">{{nome}}{{empresa}}</a>
       <nav class="nav">
         <a href="#sobre">Sobre</a>
         <a href="#atuacao">Atuação</a>
         <a href="#contato">Contato</a>
-        <a class="btn btn-primario" href="/diagnostico">Diagnóstico gratuito</a>
+        <a class="btn btn-ouro" href="/diagnostico">Diagnóstico</a>
       </nav>
     </div>
   </header>
@@ -25,78 +26,96 @@
   <main>
     <div class="hero">
       <div class="wrap">
-        <div>
+        <div class="hero-texto">
           <span class="rotulo">{{titulo}}</span>
-          <h1>{{nome}}</h1>
+          <h1>{{nome_h1}}</h1>
           <p class="chamada">{{chamada}}</p>
           <div class="acoes">
-            <a class="btn btn-cobre" href="/diagnostico">Avaliar minha empresa</a>
-            <a class="btn btn-claro" href="#sobre">Conhecer minha trajetória</a>
+            <a class="btn btn-ouro seta" href="/diagnostico">Avaliar minha empresa</a>
+            <a class="btn btn-linha" href="#sobre">Trajetória</a>
           </div>
         </div>
-        <div class="retrato">{{foto}}</div>
+        <figure class="retrato">{{foto}}</figure>
       </div>
     </div>
 
-    <section id="sobre" class="sec-branca">
-      <div class="wrap sobre">
-        <div>
-          <span class="rotulo">Sobre</span>
-          <h2>Da operação ao conselho.</h2>
+    <div class="credenciais">
+      <div class="wrap">
+        <div><strong>Conselho de Administração</strong>Formação e certificação de conselheiro</div>
+        <div><strong>AI-Driven Project Manager</strong>Certificação AIPM · IA aplicada a projetos</div>
+        <div><strong>Telecom &amp; Infraestrutura</strong>Trajetória executiva em operação e projetos</div>
+      </div>
+    </div>
+
+    <section id="sobre">
+      <div class="wrap">
+        <div class="manifesto">
+          <span class="rotulo">Manifesto</span>
+          <p>Tecnologia só gera valor quando vem acompanhada de <em>governança</em>, método e gente preparada.</p>
         </div>
-        <div class="texto">{{bio}}</div>
+        <div class="sobre" style="margin-top:clamp(64px,9vw,120px)">
+          <div>
+            <span class="rotulo">Sobre</span>
+            <h2>Da operação<br>ao conselho.</h2>
+          </div>
+          <div class="texto">{{bio}}</div>
+        </div>
       </div>
     </section>
 
-    <section id="atuacao">
+    <section id="atuacao" class="sec-branca">
       <div class="wrap">
-        <span class="rotulo">Atuação</span>
-        <h2>Onde posso ajudar</h2>
-        <div class="pilares">
-          <div class="pilar">
+        <div class="cab-sec">
+          <div>
+            <span class="rotulo">Atuação</span>
+            <h2>Onde eu gero valor.</h2>
+          </div>
+          <a class="btn btn-claro seta" href="/diagnostico">Começar pelo diagnóstico</a>
+        </div>
+        <div class="lista-atuacao">
+          <div class="item-atuacao">
             <span class="num">01</span>
             <h3>Governança e conselho</h3>
-            <p>Visão de conselheiro para organizar decisões, riscos e prioridades, incluindo a pauta de tecnologia e IA na diretoria.</p>
+            <p>Organizar decisões, riscos e prioridades, e colocar tecnologia e IA na pauta da diretoria.</p>
           </div>
-          <div class="pilar">
+          <div class="item-atuacao">
             <span class="num">02</span>
             <h3>IA aplicada a projetos</h3>
-            <p>Método AIPM para levar IA ao planejamento, aos riscos, aos cronogramas e ao acompanhamento de projetos, com o ser humano no comando.</p>
+            <p>Método AIPM para levar IA a planejamento, riscos, cronogramas e acompanhamento, com o ser humano no comando.</p>
           </div>
-          <div class="pilar">
+          <div class="item-atuacao">
             <span class="num">03</span>
             <h3>Telecom e infraestrutura</h3>
-            <p>Experiência prática em operação, contratos e projetos de rede, para empresas que precisam ganhar eficiência em campo.</p>
+            <p>Operação, contratos e projetos de rede para empresas que precisam ganhar eficiência em campo.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <section style="padding-top:0">
+    <section class="faixa-diag">
       <div class="wrap">
-        <div class="cta-diag">
-          <div>
-            <span class="rotulo">Diagnóstico gratuito · 3 minutos</span>
-            <h2>Qual é o nível de maturidade em IA da sua empresa?</h2>
-            <p>Responda 12 perguntas e receba na hora uma nota de 0 a 100, a leitura por área e um plano de 90 dias.</p>
-            <a class="btn btn-cobre" href="/diagnostico" style="margin-top:8px">Fazer o diagnóstico</a>
-          </div>
-          <ul>
+        <div>
+          <span class="rotulo">Diagnóstico gratuito</span>
+          <h2>12 perguntas.<br>3 minutos.<br><em>Um plano de 90 dias.</em></h2>
+          <p style="max-width:30em">Descubra o nível de maturidade em IA e governança da sua empresa, com nota de 0 a 100 e leitura por área.</p>
+        </div>
+        <div>
+          <ol class="dims">
             <li>Estratégia e governança</li>
             <li>Processos e projetos</li>
             <li>Dados e tecnologia</li>
             <li>Pessoas e cultura</li>
-          </ul>
+          </ol>
+          <a class="btn btn-ouro seta" href="/diagnostico">Fazer o diagnóstico</a>
         </div>
       </div>
     </section>
 
-    <section id="contato" class="sec-branca contato">
+    <section id="contato" class="contato">
       <div class="wrap">
         <span class="rotulo">Contato</span>
-        <h2>Vamos conversar?</h2>
-        <p>Uma conversa de 30 minutos para entender o momento da sua empresa.</p>
-        <div class="acoes">{{contatos}}</div>
+        <h2>Vamos <em>conversar.</em></h2>
+        <div class="links-contato">{{contatos}}</div>
       </div>
     </section>
   </main>
@@ -104,7 +123,7 @@
   <footer>
     <div class="wrap">
       <span>© {{ano}} {{nome}}</span>
-      <a href="/painel" style="text-decoration:none">Área restrita</a>
+      <a href="/painel">Área restrita</a>
     </div>
   </footer>
 </body>

@@ -123,24 +123,27 @@ function renderHome() {
   const p = perfil();
   const iniciais = p.nome.split(/\s+/).filter(Boolean).map((w) => w[0]).slice(0, 2).join('').toUpperCase();
   const foto = p.foto
-    ? `<img src="${esc(p.foto)}" alt="${esc(p.nome)}" class="retrato-img">`
+    ? `<img src="${esc(p.foto)}" alt="${esc(p.nome)}" class="retrato-img"><figcaption>${esc(p.nome)}</figcaption>`
     : `<div class="retrato-vazio" aria-hidden="true">${esc(iniciais)}</div>`;
   const bio = p.bio.split(/\n\s*\n/).map((par) => `<p>${esc(par.trim())}</p>`).join('');
   const wa = soDigitos(p.whatsapp);
   const contatos = [
-    wa && `<a class="btn btn-claro" href="https://wa.me/${wa}" target="_blank" rel="noopener">WhatsApp</a>`,
-    p.linkedin && `<a class="btn btn-claro" href="${esc(p.linkedin)}" target="_blank" rel="noopener">LinkedIn</a>`,
-    p.email && `<a class="btn btn-claro" href="mailto:${esc(p.email)}">E-mail</a>`,
+    wa && `<a href="https://wa.me/${wa}" target="_blank" rel="noopener">WhatsApp</a>`,
+    p.linkedin && `<a href="${esc(p.linkedin)}" target="_blank" rel="noopener">LinkedIn</a>`,
+    p.email && `<a href="mailto:${esc(p.email)}">${esc(p.email)}</a>`,
   ].filter(Boolean).join('');
+  const [primeiro, ...resto] = p.nome.trim().split(/\s+/);
+  const nomeH1 = resto.length ? `<span>${esc(primeiro)}</span><span>${esc(resto.join(' '))}</span>` : esc(primeiro);
   const tpl = fs.readFileSync(path.join(__dirname, 'views', 'home.html'), 'utf8');
   return tpl
+    .replaceAll('{{nome_h1}}', nomeH1)
     .replaceAll('{{nome}}', esc(p.nome))
     .replaceAll('{{titulo}}', esc(p.titulo))
     .replaceAll('{{chamada}}', esc(p.chamada))
     .replaceAll('{{empresa}}', p.empresa ? `<span class="marca-empresa">${esc(p.empresa)}</span>` : '')
     .replaceAll('{{foto}}', foto)
     .replaceAll('{{bio}}', bio)
-    .replaceAll('{{contatos}}', contatos || '<a class="btn btn-claro" href="/diagnostico">Começar pelo diagnóstico</a>')
+    .replaceAll('{{contatos}}', contatos || '<a href="/diagnostico">Começar pelo diagnóstico</a>')
     .replaceAll('{{ano}}', String(new Date().getFullYear()));
 }
 
