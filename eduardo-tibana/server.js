@@ -118,18 +118,20 @@ app.use(express.json({ limit: '6mb' }));
 
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const soDigitos = (s) => String(s || '').replace(/\D/g, '');
+// Só aceita link http(s); qualquer outra coisa (javascript:, data:) vira vazio.
+const linkSeguro = (s) => (/^https?:\/\//i.test(String(s || '').trim()) ? String(s).trim() : '');
 
 function renderHome() {
   const p = perfil();
-  const iniciais = p.nome.split(/\s+/).filter(Boolean).map((w) => w[0]).slice(0, 2).join('').toUpperCase();
+  // Sem foto enviada pelo painel, usa o recorte oficial (fundo removido, assenta na base do quadro).
   const foto = p.foto
-    ? `<img src="${esc(p.foto)}" alt="${esc(p.nome)}" class="retrato-img">`
-    : `<div class="retrato-vazio" aria-hidden="true">${esc(iniciais)}</div>`;
+    ? `<img src="${esc(p.foto)}" alt="${esc(p.nome)}" class="retrato-img" width="900" height="1125" fetchpriority="high">`
+    : `<img src="/img/eduardo-tibana.webp" alt="${esc(p.nome)}" class="retrato-img recorte" width="460" height="672" fetchpriority="high">`;
   const bio = p.bio.split(/\n\s*\n/).map((par) => `<p>${esc(par.trim())}</p>`).join('');
   const wa = soDigitos(p.whatsapp);
   const contatos = [
     wa && `<a class="btn btn-claro" href="https://wa.me/${wa}" target="_blank" rel="noopener">WhatsApp</a>`,
-    p.linkedin && `<a class="btn btn-claro" href="${esc(p.linkedin)}" target="_blank" rel="noopener">LinkedIn</a>`,
+    linkSeguro(p.linkedin) && `<a class="btn btn-claro" href="${esc(linkSeguro(p.linkedin))}" target="_blank" rel="noopener">LinkedIn</a>`,
     p.email && `<a class="btn btn-claro" href="mailto:${esc(p.email)}">E-mail</a>`,
   ].filter(Boolean).join('');
   const tpl = fs.readFileSync(path.join(__dirname, 'views', 'home.html'), 'utf8');
@@ -157,7 +159,7 @@ app.use(express.static(path.join(__dirname, 'public'), { maxAge: '1h' }));
 // ---------- API pública ----------
 app.get('/api/perfil', (req, res) => {
   const p = perfil();
-  res.json({ nome: p.nome, whatsapp: soDigitos(p.whatsapp), foto: p.foto });
+  res.json({ nome: p.nome, whatsapp: soDigitos(p.whatsapp), email: p.email, linkedin: linkSeguro(p.linkedin), foto: p.foto });
 });
 
 app.get('/api/perguntas', (req, res) => res.json({ dimensoes: DIMENSOES, perguntas: PERGUNTAS }));
@@ -309,7 +311,7 @@ app.post('/api/admin/foto', exigeLogin, (req, res) => {
   res.json({ foto: `/uploads/${nome}` });
 });
 
-app.use((req, res) => res.status(404).type('html').send('<p style="font-family:sans-serif;padding:40px">Página não encontrada. <a href="/">Voltar</a></p>'));
+app.use((req, res) => res.status(404).sendFile(path.join(__dirname, 'views', '404.html')));
 
 app.listen(PORT, () => {
   console.log(`Rodando em http://localhost:${PORT}`);

@@ -22,7 +22,6 @@
   function telaPrimeiroAcesso() {
     app.innerHTML = `
       <div class="login">
-        <span class="rotulo">Primeiro acesso</span>
         <h2>Crie sua senha</h2>
         <p>Use o código de acesso que você recebeu e defina uma senha pessoal. Depois disso, o código deixa de valer.</p>
         <form class="cartao" id="f">
@@ -48,7 +47,6 @@
   function telaLogin() {
     app.innerHTML = `
       <div class="login">
-        <span class="rotulo">Área restrita</span>
         <h2>Entrar no painel</h2>
         <form class="cartao" id="f">
           <div class="campo"><label for="senha">Senha</label><input id="senha" type="password" required autocomplete="current-password" autofocus></div>
