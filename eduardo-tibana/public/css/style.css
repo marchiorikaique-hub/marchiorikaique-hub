@@ -336,6 +336,88 @@ textarea { min-height: 120px; resize: vertical; line-height: 1.5; }
 .nao-achou { min-height: 70vh; display: grid; align-content: center; }
 .nao-achou .nota { font-size: clamp(6rem, 22vw, 11rem); margin-bottom: 24px; }
 
+/* ---------- Celular com ritmo de app ---------- */
+.g-sem, .tabbar { display: none; }
+@media (max-width: 760px) {
+  body:has(.tabbar) { padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
+  html { scroll-padding-top: 64px; }
+  .topo .wrap { min-height: 56px; }
+  .topo .nav { display: none; }
+  .marca { font-size: 1.15rem; }
+
+  /* Barra de abas fixa, alcance do polegar */
+  .tabbar { display: grid; grid-template-columns: repeat(5, 1fr); position: fixed; z-index: 30; left: 0; right: 0; bottom: 0; padding: 6px 4px calc(6px + env(safe-area-inset-bottom)); background: color-mix(in srgb, var(--folha) 96%, transparent); border-top: 1px solid var(--grade-forte); }
+  @supports (backdrop-filter: blur(1px)) { .tabbar { backdrop-filter: saturate(1.2) blur(12px); } }
+  .tabbar a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 52px; text-decoration: none; color: var(--suave); font: 600 .68rem var(--sans); font-stretch: 90%; }
+  .tabbar a:active { color: var(--tinta); }
+  .tabbar svg { width: 24px; height: 24px; }
+  .tabbar .tab-acao { color: var(--tinta); }
+  .tabbar .tab-acao svg { width: 44px; height: 44px; padding: 10px; margin-top: -18px; background: var(--critico); color: var(--tinta); border-radius: 50%; box-shadow: 0 4px 14px rgba(255, 79, 20, .35); }
+
+  /* Hero vira cabeçalho de perfil */
+  .hero { padding: 20px 0 32px; }
+  .hero-grid { grid-template-columns: 116px minmax(0, 1fr); grid-template-areas: "retrato titulo" "retrato nome" "texto texto"; column-gap: 16px; align-items: end; margin-bottom: 36px; }
+  .retrato { max-width: none; margin: 0; align-self: start; }
+  .retrato figcaption { display: none; }
+  .quadro { aspect-ratio: 4 / 5; }
+  .quadro::after { display: none; }
+  .retrato-img.recorte { height: 96%; }
+  .hero-titulo { font-size: .86rem; line-height: 1.35; margin: 0 0 6px; align-self: end; }
+  .hero-grid h1 { font-size: clamp(2.1rem, 10.5vw, 2.6rem); line-height: .92; margin: 0; align-self: start; }
+  .hero-texto { margin-top: 22px; }
+  .hero p.chamada { font-size: 1.12rem; margin-bottom: 20px; }
+  .credenciais { display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; border-top: none; margin: 0 -16px 22px; padding: 0 16px 4px; scroll-padding-inline: 16px; scrollbar-width: none; }
+  .credenciais::-webkit-scrollbar { display: none; }
+  .credenciais li, .credenciais li:nth-child(even) { flex: 0 0 62%; scroll-snap-align: start; padding: 14px; border: 1px solid var(--grade-forte); border-top: 1.5px solid var(--tinta); background: var(--folha); }
+  .hero .acoes .btn-cobre { flex: 1; }
+  .hero .acoes .btn-claro { display: none; }
+
+  /* Plano de 90 dias vira lista de etapas */
+  .hero-plano .cabeca { flex-direction: column; gap: 4px; }
+  .hero-plano .cabeca .status { display: none; }
+  .hero-plano .g-escala { display: none; }
+  .hero-plano .gantt { border-top: 1.5px solid var(--tinta); }
+  .g-sem { display: block; font: 600 .74rem var(--mono); font-stretch: 85%; color: var(--tinta-2); margin-top: 6px; }
+  .hero-plano .g-linha { grid-template-columns: 1fr 34%; gap: 12px; padding: 14px 0; min-height: 0; }
+  .hero-plano .g-linha .g-rot { padding: 0; }
+  .hero-plano .g-trilho { min-height: 12px; height: 12px; align-self: center; background: var(--grade); }
+  .hero-plano .g-trilho i { display: none; }
+  .hero-plano .g-barra { height: 12px; margin-top: -6px; }
+  .linha-acao { grid-template-columns: 1fr auto !important; margin: 8px 0; padding: 14px !important; background: var(--critico-claro); border: none; }
+  .linha-acao:hover { background: var(--critico-claro); }
+  .linha-acao .g-rot small { color: var(--texto); }
+  .linha-acao .g-sem { color: var(--critico-texto); }
+  .linha-acao .g-trilho { display: flex; align-items: center; background: none; height: auto; }
+  .linha-acao .g-marco { display: none; }
+  .linha-acao .g-chamar { position: static; transform: none; font-size: 0; }
+  .linha-acao .g-chamar svg { width: 26px; height: 26px; }
+  .hero-pe { display: none; }
+
+  /* Seções mais curtas, títulos no tamanho do polegar */
+  section { padding: 44px 0; }
+  h2 { font-size: clamp(1.8rem, 8.4vw, 2.2rem); }
+  .sobre .texto p { font-size: 1.02rem; }
+  .trajetoria { margin-top: 20px; }
+  .frentes { margin-top: 20px; }
+  .frente { padding: 18px 0; gap: 8px; }
+  .frente h3 { font-size: 1.3rem; }
+  .frente .onde { display: flex; align-items: center; gap: 10px; max-width: none; }
+  .frente .onde .g-trilho { flex: 1; min-height: 8px; height: 8px; background: var(--grade); }
+  .frente .onde .status { margin: 0; white-space: nowrap; }
+  .faixa-diag .grid { gap: 28px; }
+  .faixa-diag .btn { width: 100%; }
+  .contato .acoes .btn { flex: 1 1 100%; }
+  footer { padding-bottom: 20px; }
+
+  /* Diagnóstico: ação principal fixa no alcance do polegar */
+  .diag { padding-top: 24px; }
+  .intro-diag > div:last-child { position: sticky; bottom: 0; background: var(--papel); padding: 12px 0 calc(12px + env(safe-area-inset-bottom)); }
+  .intro-diag .btn-cobre, .diag .nav-passos .btn-cobre, .rel-acoes .btn { width: 100%; }
+  .diag .nav-passos { flex-direction: column-reverse; align-items: stretch; }
+  .pergunta .nav-passos { flex-direction: row; }
+  .pergunta .nav-passos .status { display: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
   html { scroll-behavior: auto; }

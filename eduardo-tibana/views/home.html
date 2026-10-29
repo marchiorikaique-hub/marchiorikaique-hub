@@ -9,7 +9,7 @@
   <meta property="og:description" content="{{chamada}}">
   <meta name="theme-color" content="#eef1ef">
   <link rel="preload" href="/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css?v=20261029">
 </head>
 <body>
 <!--
@@ -20,7 +20,7 @@ FIRST VIEWPORT: nome enorme em condensada à esquerda, frase à direita; abaixo 
 FORM: Cronograma de Projeto, 5º da lista ordenada; seed 929499ae.
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
 -->
-  <header class="topo">
+  <header class="topo" id="topo">
     <div class="wrap">
       <a class="marca" href="/">{{nome}}{{empresa}}</a>
       <nav class="nav" aria-label="Seções">
@@ -68,22 +68,22 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
               <div class="g-semanas" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span></div>
             </div>
             <a class="g-linha linha-acao" href="/diagnostico" role="row">
-              <span class="g-rot" role="cell"><strong>Diagnóstico de maturidade</strong><small>12 perguntas · 3 minutos</small></span>
+              <span class="g-rot" role="cell"><strong>Diagnóstico de maturidade</strong><small>12 perguntas · 3 minutos</small><em class="g-sem">semana 1 · comece aqui</em></span>
               <span class="g-trilho" role="cell"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
                 <span class="g-marco" style="--de:1" aria-hidden="true"></span>
                 <span class="g-chamar">Começar agora <svg class="seta" viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M3 10h13M11 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span>
               </span>
             </a>
             <div class="g-linha" role="row">
-              <span class="g-rot" role="cell">Governança e política de IA<small>dono, regras, portfólio</small></span>
+              <span class="g-rot" role="cell">Governança e política de IA<small>dono, regras, portfólio</small><em class="g-sem">semanas 1 a 4</em></span>
               <span class="g-trilho" role="cell"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="g-barra" style="--de:1;--ate:4;--i:1"></span></span>
             </div>
             <div class="g-linha" role="row">
-              <span class="g-rot" role="cell">Piloto com indicador<small>um projeto real, medido</small></span>
+              <span class="g-rot" role="cell">Piloto com indicador<small>um projeto real, medido</small><em class="g-sem">semanas 5 a 9</em></span>
               <span class="g-trilho" role="cell"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="g-barra" style="--de:5;--ate:9;--i:2"></span></span>
             </div>
             <div class="g-linha" role="row">
-              <span class="g-rot" role="cell">Revisão com a liderança<small>ajustes e decisão de escala</small></span>
+              <span class="g-rot" role="cell">Revisão com a liderança<small>ajustes e decisão de escala</small><em class="g-sem">semanas 10 a 13</em></span>
               <span class="g-trilho" role="cell"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="g-barra base" style="--de:10;--ate:13;--i:3"></span></span>
             </div>
             <span class="g-hoje" aria-hidden="true"></span>
@@ -167,5 +167,12 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
       <a href="/painel">Área restrita</a>
     </div>
   </footer>
+  <nav class="tabbar" aria-label="Navegação">
+    <a href="#topo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.5 12 5l8 6.5V20h-5.5v-5h-5v5H4z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Início</span></a>
+    <a href="#sobre"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18h4V12H4zM10 18h4V8h-4zM16 18h4V4h-4z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Trajetória</span></a>
+    <a class="tab-acao" href="/diagnostico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v16M4 12h16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Diagnóstico</span></a>
+    <a href="#atuacao"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h10M4 17h13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Atuação</span></a>
+    <a href="#contato"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v11H8l-4 3z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Contato</span></a>
+  </nav>
 </body>
 </html>

@@ -126,7 +126,7 @@ function renderHome() {
   // Sem foto enviada pelo painel, usa o recorte oficial (fundo removido, assenta na base do quadro).
   const foto = p.foto
     ? `<img src="${esc(p.foto)}" alt="${esc(p.nome)}" class="retrato-img" width="900" height="1125" fetchpriority="high">`
-    : `<img src="/img/eduardo-tibana.webp" alt="${esc(p.nome)}" class="retrato-img recorte" width="460" height="672" fetchpriority="high">`;
+    : `<img src="/img/eduardo-tibana.webp" alt="${esc(p.nome)}" class="retrato-img recorte" width="920" height="1344" fetchpriority="high">`;
   const bio = p.bio.split(/\n\s*\n/).map((par) => `<p>${esc(par.trim())}</p>`).join('');
   const wa = soDigitos(p.whatsapp);
   const contatos = [
