@@ -1,0 +1,10 @@
+services:
+  painel:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - ACCESS_CODE=${ACCESS_CODE}
+    volumes:
+      - ./data:/app/data

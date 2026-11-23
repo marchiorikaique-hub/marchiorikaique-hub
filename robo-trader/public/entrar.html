@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Robô Trader</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body class="entrar">
+<form id="f" class="cartao">
+  <h1>Robô Trader</h1>
+  <p class="suave">Digite o código de acesso do painel.</p>
+  <label for="codigo">Código de acesso</label>
+  <input id="codigo" type="password" autocomplete="current-password" autofocus required>
+  <p id="erro" class="erro" role="alert"></p>
+  <button class="primario">Entrar</button>
+</form>
+<script>
+document.getElementById('f').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const r = await fetch('/entrar', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ codigo: document.getElementById('codigo').value }) });
+  if (r.ok) location.reload(); else document.getElementById('erro').textContent = (await r.json()).erro;
+});
+</script>
+</body>
+</html>

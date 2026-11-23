@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Robô Trader</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="topo">
+  <div class="marca">Robô Trader <span class="selo">Somente simulação</span></div>
+  <nav id="abas" role="tablist" aria-label="Seções">
+    <button role="tab" data-aba="projeto" aria-selected="true">Projeto</button>
+    <button role="tab" data-aba="simulador" aria-selected="false">Simulador</button>
+    <button role="tab" data-aba="sinais" aria-selected="false">Sinais</button>
+    <button role="tab" data-aba="validacao" aria-selected="false">Validação <span id="pend" class="conta"></span></button>
+    <button role="tab" data-aba="mercado" aria-selected="false">Mercado</button>
+  </nav>
+</header>
+
+<main>
+<section id="projeto" class="aba">
+  <h1>Robôs do projeto</h1>
+  <p class="suave">Nenhum robô envia ordens por aqui. O painel testa as regras em dados históricos e registra o que o Vitor confirma.</p>
+  <div id="robos" class="grade-robos"></div>
+  <h2>Caminho até operar</h2>
+  <ol class="passos">
+    <li><b>Validar as regras.</b> O Vitor confirma ou corrige cada ponto na aba Validação.</li>
+    <li><b>Testar com dados reais do WIN.</b> Exportar candles de 1 minuto do Profit e enviar no Simulador.</li>
+    <li><b>Escrever o robô em NTSL.</b> Com as regras fechadas, gerar o código e compilar no Profit.</li>
+    <li><b>Rodar no simulador do Profit.</b> Algumas semanas em conta simulada, comparando com o painel.</li>
+    <li><b>Conta real, 1 contrato.</b> Só com limite de perda configurado também na corretora.</li>
+  </ol>
+</section>
+
+<section id="simulador" class="aba" hidden>
+  <h1>Simulador</h1>
+  <div class="sim">
+    <form id="form-sim" class="cartao painel-form">
+      <fieldset>
+        <legend>Robô</legend>
+        <div class="segmento">
+          <label><input type="radio" name="robo" value="grid" checked><span>Grid 15M</span></label>
+          <label><input type="radio" name="robo" value="scalper"><span>Scalper V1</span></label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Dados</legend>
+        <label for="fonte" class="oculto">Fonte dos dados</label>
+        <select id="fonte" name="fonte">
+          <option value="sintetico">Série sintética (teste da mecânica)</option>
+          <option value="yahoo">Ibovespa à vista (Yahoo)</option>
+          <option value="csv">Arquivo exportado do Profit</option>
+        </select>
+        <div id="csv-box" hidden>
+          <p id="csv-info" class="suave pequeno"></p>
+          <label class="botao-arquivo">Enviar CSV do Profit<input id="csv" type="file" accept=".csv,.txt"></label>
+          <p class="suave pequeno">Colunas: data, hora, abertura, máxima, mínima, fechamento e volume. Candles de 1 minuto dão o resultado mais fiel.</p>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Parâmetros</legend>
+        <div id="campos" class="campos"></div>
+      </fieldset>
+      <p id="sim-erro" class="erro" role="alert"></p>
+      <button class="primario" id="rodar">Rodar simulação</button>
+    </form>
+    <div id="resultado" class="resultado" aria-live="polite">
+      <div class="vazio">Escolha o robô e os dados, depois rode a simulação. O resultado aparece aqui.</div>
+    </div>
+  </div>
+</section>
+
+<section id="sinais" class="aba" hidden>
+  <h1>Sinais do robô</h1>
+  <p class="suave">O robô registra cada indicação de compra ou venda e o painel confere sozinho se ela bateu o alvo ou o stop. O Vitor marca se concorda. Os dados chegam com atraso, então serve para medir o robô, não para operar.</p>
+  <p id="sinais-aviso" class="faixa alerta" hidden></p>
+  <div id="placar" class="kpis"></div>
+  <p id="sinais-nota" class="suave pequeno"></p>
+  <h2>Indicações</h2>
+  <div class="rolagem alta"><table><thead><tr><th>Quando</th><th>Indicação</th><th class="d">Preço</th><th class="d">Stop</th><th class="d">Alvo</th><th>Resultado</th><th class="d">Pontos</th><th>Opinião do Vitor</th></tr></thead><tbody id="lista-sinais"></tbody></table></div>
+
+  <h2>Busca de parâmetros</h2>
+  <p class="suave">Testa 48 combinações de médias, stop e alvo nos primeiros 70% dos dias e mostra como cada uma foi nos 30% finais, que a busca não viu. Só a coluna "Dias não vistos" indica se o ajuste se sustenta.</p>
+  <div class="linha-busca">
+    <label for="fonte-busca" class="oculto">Dados da busca</label>
+    <select id="fonte-busca"><option value="sintetico">Série sintética</option><option value="yahoo">Ibovespa à vista (Yahoo, 7 dias)</option><option value="csv">Arquivo exportado do Profit</option></select>
+    <button id="buscar" class="secundario">Buscar</button>
+  </div>
+  <p id="busca-erro" class="erro" role="alert"></p>
+  <div id="busca"></div>
+</section>
+
+<section id="validacao" class="aba" hidden>
+  <h1>Validação das regras do Grid 15M</h1>
+  <p class="suave">Cada item é uma premissa usada no simulador. Confirme se é assim que você opera ou diga como deve ficar.</p>
+  <div class="quem"><label for="quem">Seu nome</label><input id="quem" placeholder="Vitor" maxlength="60"></div>
+  <div id="pontos"></div>
+</section>
+
+<section id="mercado" class="aba" hidden>
+  <h1>Contexto de mercado</h1>
+  <p class="suave">Dados públicos para leitura do dia. Servem de filtro para os robôs, não são sinal de compra ou venda. <span id="ctx-hora"></span></p>
+  <div id="indicadores" class="indicadores"></div>
+  <div class="duas">
+    <div><h2>Notícias</h2><ul id="noticias" class="noticias"></ul></div>
+    <div><h2>Chuva prevista em polos agrícolas, 7 dias</h2><div id="clima"></div>
+      <p class="suave pequeno">Pesa em commodities agrícolas. Para o mini-índice o efeito é indireto.</p></div>
+  </div>
+</section>
+</main>
+<script src="/app.js"></script>
+</body>
+</html>
