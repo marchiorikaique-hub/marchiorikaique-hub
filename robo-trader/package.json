@@ -1,0 +1,17 @@
+{
+  "name": "robo-trader",
+  "version": "0.1.0",
+  "description": "Painel de simulação e validação dos robôs de trading (WIN Grid 15M, WIN Scalper V1)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning server.js",
+    "test": "node --test test/*.test.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "engines": {
+    "node": ">=22.13"
+  },
+  "private": true
+}
