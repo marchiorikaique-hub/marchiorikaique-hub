@@ -21,6 +21,7 @@ function abrir(nome) {
   abas.forEach((b) => b.setAttribute('aria-selected', b.dataset.aba === nome));
   document.querySelectorAll('.aba').forEach((s) => (s.hidden = s.id !== nome));
   if (nome === 'mercado') carregarMercado();
+  if (nome === 'sinais') carregarSinais();
   if (location.hash.slice(1) !== nome) history.replaceState(null, '', '#' + nome);
 }
 abas.forEach((b) => b.addEventListener('click', () => abrir(b.dataset.aba)));
@@ -213,6 +214,51 @@ function desenharDia() {
   }
 }
 let rs; addEventListener('resize', () => { clearTimeout(rs); rs = setTimeout(() => { if (sim && sim.operacoes) { desenharCurva(); desenharDia(); } }, 150); });
+
+// ---------- Sinais ----------
+const ROTULO = { alvo: ['Bateu o alvo', 'pos'], stop: ['Bateu o stop', 'neg'], zerado: ['Zerado no fim do dia', ''], aberto: ['Em aberto', ''], 'sem dados': ['Sem dados para conferir', ''] };
+const pct = (t) => (t.n ? n((t.acertos / t.n) * 100, 0) + '%' : '—');
+async function carregarSinais() {
+  let d;
+  try { d = await api('/api/sinais'); } catch (e) { $('#sinais-aviso').hidden = false; $('#sinais-aviso').textContent = e.message; return; }
+  const p = d.placar, av = $('#sinais-aviso');
+  av.hidden = !d.erro;
+  if (d.erro) av.textContent = `Não consegui atualizar os dados agora (${d.erro}). A lista mostra o que já estava registrado.`;
+  const k = (rot, val, c = '') => `<div class="kpi"><span>${rot}</span><b class="${c}">${val}</b></div>`;
+  $('#placar').innerHTML =
+    k('Acerto do robô', pct(p.robo), p.robo.n ? (p.robo.acertos / p.robo.n > p.empate ? 'pos' : 'neg') : '') +
+    k('Acerto para empatar', n(p.empate * 100, 0) + '%') +
+    k('Saldo em pontos', (p.pontos > 0 ? '+' : '') + n(p.pontos), cls(p.pontos)) +
+    k('Indicações conferidas', `${p.robo.n}`) +
+    k('Acerto quando o Vitor concordou', pct(p.concordou)) +
+    k('Acerto quando discordou', pct(p.discordou));
+  $('#sinais-nota').textContent = `Regra atual: Scalper V1, stop de ${d.regra.stop} e alvo de ${d.regra.alvo} pontos, no Ibovespa à vista de 1 minuto (Yahoo). ${p.total} indicações registradas, ${p.abertos} em aberto, ${p.votados} com opinião.` + (d.ultimoCandle ? ` Último candle recebido: ${dt(d.ultimoCandle).toLocaleString('pt-BR', { timeZone: 'UTC', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}.` : '');
+  $('#lista-sinais').innerHTML = d.lista.length ? d.lista.map((s) => {
+    const [rot, c] = ROTULO[s.status] || [s.status, ''];
+    return `<tr data-t="${s.t}"><td class="num">${dt(s.t).toLocaleString('pt-BR', { timeZone: 'UTC', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}</td>
+      <td class="${s.lado > 0 ? 'pos' : 'neg'}">${s.lado > 0 ? 'Comprar' : 'Vender'}</td><td class="d num">${n(s.preco)}</td><td class="d num">${n(s.stop)}</td><td class="d num">${n(s.alvo)}</td>
+      <td class="${c}">${rot}</td><td class="d num ${cls(s.pts)}">${s.pts == null ? '—' : n(s.pts)}</td>
+      <td><div class="voto"><button data-voto="certo" aria-pressed="${s.voto === 'certo'}">Eu entraria</button><button data-voto="errado" aria-pressed="${s.voto === 'errado'}">Não entraria</button></div></td></tr>`;
+  }).join('') : '<tr><td colspan="8" class="suave">Nenhuma indicação registrada ainda.</td></tr>';
+}
+$('#lista-sinais').addEventListener('click', async (e) => {
+  const b = e.target.closest('button[data-voto]');
+  if (!b) return;
+  const voto = b.getAttribute('aria-pressed') === 'true' ? null : b.dataset.voto;
+  await post(`/api/sinais/${b.closest('tr').dataset.t}/voto`, { voto, quem: $('#quem').value.trim() });
+  carregarSinais();
+});
+$('#buscar').addEventListener('click', async () => {
+  const bt = $('#buscar');
+  bt.disabled = true; bt.textContent = 'Buscando…'; $('#busca-erro').textContent = '';
+  try {
+    const r = await post('/api/otimizar', { fonte: $('#fonte-busca').value });
+    $('#busca').innerHTML = `<div class="faixa ${$('#fonte-busca').value === 'csv' ? '' : 'alerta'}">${esc(r.rotulo)} Busca em ${r.diasTreino} dias, conferência em ${r.diasTeste} dias. Das ${r.combinacoes} combinações, ${r.positivasNoTeste} ficaram positivas nos dias não vistos.</div>
+      <div class="rolagem"><table><thead><tr><th>Médias</th><th class="d">Stop</th><th class="d">Alvo</th><th class="d">Dias da busca</th><th class="d">Dias não vistos</th><th class="d">Operações</th><th class="d">Acerto</th></tr></thead><tbody>
+      ${r.melhores.map((l) => `<tr><td class="num">${l.emaRapida}/${l.emaLenta}</td><td class="d num">${l.stop}</td><td class="d num">${l.alvo}</td><td class="d num ${cls(l.treino)}">${brl(l.treino)}</td><td class="d num ${cls(l.teste)}">${brl(l.teste)}</td><td class="d num">${l.opsTeste}</td><td class="d num">${n(l.acertoTeste * 100, 0)}%</td></tr>`).join('')}</tbody></table></div>`;
+  } catch (e) { $('#busca-erro').textContent = e.message; }
+  bt.disabled = false; bt.textContent = 'Buscar';
+});
 
 // ---------- Mercado ----------
 let mercadoEm = 0;

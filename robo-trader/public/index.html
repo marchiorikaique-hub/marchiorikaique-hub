@@ -12,6 +12,7 @@
   <nav id="abas" role="tablist" aria-label="Seções">
     <button role="tab" data-aba="projeto" aria-selected="true">Projeto</button>
     <button role="tab" data-aba="simulador" aria-selected="false">Simulador</button>
+    <button role="tab" data-aba="sinais" aria-selected="false">Sinais</button>
     <button role="tab" data-aba="validacao" aria-selected="false">Validação <span id="pend" class="conta"></span></button>
     <button role="tab" data-aba="mercado" aria-selected="false">Mercado</button>
   </nav>
@@ -68,6 +69,26 @@
       <div class="vazio">Escolha o robô e os dados, depois rode a simulação. O resultado aparece aqui.</div>
     </div>
   </div>
+</section>
+
+<section id="sinais" class="aba" hidden>
+  <h1>Sinais do robô</h1>
+  <p class="suave">O robô registra cada indicação de compra ou venda e o painel confere sozinho se ela bateu o alvo ou o stop. O Vitor marca se concorda. Os dados chegam com atraso, então serve para medir o robô, não para operar.</p>
+  <p id="sinais-aviso" class="faixa alerta" hidden></p>
+  <div id="placar" class="kpis"></div>
+  <p id="sinais-nota" class="suave pequeno"></p>
+  <h2>Indicações</h2>
+  <div class="rolagem alta"><table><thead><tr><th>Quando</th><th>Indicação</th><th class="d">Preço</th><th class="d">Stop</th><th class="d">Alvo</th><th>Resultado</th><th class="d">Pontos</th><th>Opinião do Vitor</th></tr></thead><tbody id="lista-sinais"></tbody></table></div>
+
+  <h2>Busca de parâmetros</h2>
+  <p class="suave">Testa 48 combinações de médias, stop e alvo nos primeiros 70% dos dias e mostra como cada uma foi nos 30% finais, que a busca não viu. Só a coluna "Dias não vistos" indica se o ajuste se sustenta.</p>
+  <div class="linha-busca">
+    <label for="fonte-busca" class="oculto">Dados da busca</label>
+    <select id="fonte-busca"><option value="sintetico">Série sintética</option><option value="yahoo">Ibovespa à vista (Yahoo, 7 dias)</option><option value="csv">Arquivo exportado do Profit</option></select>
+    <button id="buscar" class="secundario">Buscar</button>
+  </div>
+  <p id="busca-erro" class="erro" role="alert"></p>
+  <div id="busca"></div>
 </section>
 
 <section id="validacao" class="aba" hidden>

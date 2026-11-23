@@ -119,3 +119,13 @@ body.entrar { display: grid; place-items: center; min-height: 100vh; padding: 16
 body.entrar .cartao { width: 100%; max-width: 340px; }
 body.entrar button { margin-top: .5rem; }
 @media (prefers-reduced-motion: no-preference) { button, input, select { transition: border-color .12s, filter .12s; } }
+
+.rolagem.alta { max-height: 520px; }
+.voto { display: flex; gap: .3rem; }
+.voto button, button.secundario { background: var(--painel2); color: var(--texto); border: 1px solid var(--linha); border-radius: 7px; padding: .25rem .6rem; font: inherit; font-size: .82rem; cursor: pointer; }
+.voto button:hover, button.secundario:hover { border-color: #46505c; }
+.voto button[aria-pressed="true"][data-voto="certo"] { background: color-mix(in srgb, var(--alta) 18%, transparent); border-color: var(--alta); color: var(--alta); }
+.voto button[aria-pressed="true"][data-voto="errado"] { background: color-mix(in srgb, var(--baixa) 18%, transparent); border-color: var(--baixa); color: var(--baixa); }
+button.secundario { padding: .5rem 1rem; font-size: inherit; }
+.linha-busca { display: flex; gap: .5rem; max-width: 460px; }
+#sinais-nota { margin-top: .6rem; max-width: 80ch; }

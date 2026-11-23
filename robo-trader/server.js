@@ -19,6 +19,11 @@ db.exec(`CREATE TABLE IF NOT EXISTS validacao (
   id TEXT PRIMARY KEY, status TEXT NOT NULL, comentario TEXT NOT NULL DEFAULT '', quem TEXT NOT NULL DEFAULT '', em TEXT NOT NULL
 );`);
 
+db.exec(`CREATE TABLE IF NOT EXISTS sinais (
+  t INTEGER PRIMARY KEY, lado INTEGER NOT NULL, preco REAL NOT NULL, stop REAL NOT NULL, alvo REAL NOT NULL,
+  status TEXT NOT NULL, t_fim INTEGER, pts REAL, voto TEXT, quem TEXT NOT NULL DEFAULT '', votado_em TEXT
+);`);
+
 const app = express();
 app.disable('x-powered-by');
 app.use(express.json({ limit: '200kb' }));
@@ -142,8 +147,86 @@ app.post('/api/simular', async (req, res) => {
   }
 });
 
+// ---------- Sinais: o robô indica, o painel confere sozinho e o Vitor opina ----------
+const STATUS = { Alvo: 'alvo', Stop: 'stop', 'Zeragem do dia': 'zerado', 'Fim dos dados do dia': 'zerado', 'Fim dos dados': 'aberto' };
+let sinaisEm = 0, sinaisErro = null, ultimoCandle = null;
+async function atualizarSinais() {
+  if (Date.now() - sinaisEm < 60000) return;
+  sinaisEm = Date.now();
+  try {
+    const candles = await dados.buscarYahoo(1);
+    ultimoCandle = candles.at(-1).t;
+    const P = SCALPER_PADRAO;
+    const up = db.prepare(`INSERT INTO sinais (t, lado, preco, stop, alvo, status, t_fim, pts) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      ON CONFLICT(t) DO UPDATE SET status = excluded.status, t_fim = excluded.t_fim, pts = excluded.pts WHERE sinais.status = 'aberto'`);
+    for (const t of simularScalper(candles).trades) {
+      const st = STATUS[t.motivo] || 'zerado';
+      up.run(t.tEntrada, t.lado, t.pEntrada, t.pEntrada - t.lado * P.stop, t.pEntrada + t.lado * P.alvo, st, st === 'aberto' ? null : t.tSaida, st === 'aberto' ? null : t.pts);
+    }
+    // Sinal que ficou aberto e já saiu da janela de 7 dias do Yahoo não tem mais como ser conferido.
+    db.prepare("UPDATE sinais SET status = 'sem dados' WHERE status = 'aberto' AND t < ?").run(candles[0].t);
+    sinaisErro = null;
+  } catch (e) { sinaisErro = String(e.message || e); }
+}
+const taxa = (l) => { const r = l.filter((x) => x.status === 'alvo' || x.status === 'stop'); return { n: r.length, acertos: r.filter((x) => x.status === 'alvo').length }; };
+app.get('/api/sinais', async (req, res) => {
+  await atualizarSinais();
+  const lista = db.prepare('SELECT * FROM sinais ORDER BY t DESC LIMIT 400').all();
+  const todos = db.prepare('SELECT status, pts, voto FROM sinais').all();
+  const fechados = todos.filter((x) => x.pts != null);
+  res.json({
+    erro: sinaisErro, ultimoCandle, regra: SCALPER_PADRAO, lista,
+    placar: {
+      total: todos.length, abertos: todos.filter((x) => x.status === 'aberto').length,
+      robo: taxa(todos), pontos: fechados.reduce((a, x) => a + x.pts, 0),
+      empate: SCALPER_PADRAO.stop / (SCALPER_PADRAO.stop + SCALPER_PADRAO.alvo),
+      votados: todos.filter((x) => x.voto).length,
+      concordou: taxa(todos.filter((x) => x.voto === 'certo')), discordou: taxa(todos.filter((x) => x.voto === 'errado')),
+    },
+  });
+});
+app.post('/api/sinais/:t/voto', (req, res) => {
+  const voto = ['certo', 'errado'].includes(req.body?.voto) ? req.body.voto : null;
+  const r = db.prepare('UPDATE sinais SET voto = ?, quem = ?, votado_em = ? WHERE t = ?').run(voto, String(req.body?.quem || '').slice(0, 60), new Date().toISOString(), Number(req.params.t));
+  if (!r.changes) return res.status(404).json({ erro: 'Sinal não encontrado.' });
+  res.json({ ok: true });
+});
+
+// Busca de parâmetros: escolhe nos primeiros 70% dos dias e confere nos 30% finais, que a busca não viu.
+app.post('/api/otimizar', async (req, res) => {
+  try {
+    const fonte = ['csv', 'yahoo', 'sintetico'].includes(req.body?.fonte) ? req.body.fonte : 'sintetico';
+    const { candles, tf, rotulo } = await carregar(fonte, 1);
+    if (tf !== 1) throw new Error('A busca usa candles de 1 minuto. Envie um CSV de 1 min ou escolha outra fonte.');
+    const dias = [...new Set(candles.map((c) => new Date(c.t).toISOString().slice(0, 10)))];
+    if (dias.length < 5) throw new Error('Poucos dias de dados para separar treino e conferência.');
+    const corte = Date.parse(dias[Math.floor(dias.length * 0.7)] + 'T00:00:00Z');
+    const treino = candles.filter((c) => c.t < corte), teste = candles.filter((c) => c.t >= corte);
+    const linhas = [];
+    for (const [emaRapida, emaLenta] of [[9, 21], [5, 13], [12, 26]])
+      for (const stop of [80, 100, 150, 200])
+        for (const alvo of [100, 150, 200, 300]) {
+          const p = { emaRapida, emaLenta, stop, alvo };
+          const a = simularScalper(treino, p), b = simularScalper(teste, p);
+          linhas.push({ ...p, treino: a.total, opsTreino: a.operacoes, teste: b.total, opsTeste: b.operacoes, acertoTeste: b.acerto });
+        }
+    linhas.sort((x, y) => y.treino - x.treino);
+    res.json({ rotulo, diasTreino: Math.floor(dias.length * 0.7), diasTeste: dias.length - Math.floor(dias.length * 0.7), combinacoes: linhas.length, positivasNoTeste: linhas.filter((l) => l.teste > 0).length, melhores: linhas.slice(0, 8) });
+  } catch (e) {
+    res.status(400).json({ erro: e.message });
+  }
+});
+
 app.get('/api/contexto', async (req, res) => res.json(await contexto()));
 app.get('/saude', (req, res) => res.json({ ok: true }));
 
+if (require.main === module) {
+  // Registra sinais mesmo com o painel fechado: a cada 2 min em dia útil, das 9h às 19h de Brasília.
+  setInterval(() => {
+    const b = new Date(Date.now() - 3 * 3600000);
+    if (b.getUTCDay() % 6 && b.getUTCHours() >= 9 && b.getUTCHours() < 19) atualizarSinais();
+  }, 120000).unref();
+  atualizarSinais();
+}
 if (require.main === module) app.listen(PORT, () => console.log(`Painel no ar na porta ${PORT}${ACCESS_CODE ? '' : ' (sem código de acesso)'}`));
 module.exports = app;

@@ -8,6 +8,7 @@ Painel web para testar as regras dos robôs de mini-índice (WIN) em dados hist�
 |---|---|
 | Projeto | Estado dos quatro robôs e o caminho até operar |
 | Simulador | Roda o **Grid 15M** e o **Scalper V1** com parâmetros editáveis; resultado, queda máxima, dia a dia e gráfico das entradas |
+| Sinais | Registra cada indicação de compra/venda do Scalper V1 no Ibovespa de 1 min (Yahoo, com atraso), confere sozinho se bateu alvo ou stop, guarda a opinião do Vitor e mostra o placar. Inclui busca de parâmetros com conferência em dias não vistos |
 | Validação | 12 premissas do Grid para o Vitor marcar "É assim" ou "Precisa ajustar" (fica salvo) |
 | Mercado | Dólar PTAX, Selic e IPCA (Banco Central), Ibovespa (Yahoo), cripto (CoinGecko), notícias (RSS InfoMoney), chuva em polos agrícolas (Open-Meteo) |
 
